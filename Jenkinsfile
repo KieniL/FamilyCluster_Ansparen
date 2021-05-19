@@ -98,9 +98,7 @@ pipeline {
                   reportFiles: 'checkstyle.txt',
                   reportName: "Checkstyle Report"
                 ])
-              }catch (exc) {
-                error('Check style failed' + exc.message)
-              }
+              }catch (exc) {}
             }
           }
         }
