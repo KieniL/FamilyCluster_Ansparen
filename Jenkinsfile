@@ -83,6 +83,30 @@ pipeline {
           }
         }
 
+        stage ('Checkstyles Stage Stage') {
+          steps {
+            script{
+              try{
+                sh 'rm checkstyle.txt || true'
+                sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/checkstyle.sh" '
+                sh 'chmod +x checkstyle.sh'
+                sh 'bash checkstyle.sh'
+
+                publishHTML (target: [
+                  allowMissing: false,
+                  alwaysLinkToLastBuild: false,
+                  keepAll: true,
+                  reportDir: './',
+                  reportFiles: 'checkstyle.txt',
+                  reportName: "Checkstyle Report"
+                ])
+              }catch (exc) {
+                error('Source composition analysis failed' + exc.message)
+              }
+            }
+          }
+        }
+
 
         stage ('SAST') {
           steps {
@@ -128,6 +152,8 @@ pipeline {
             }
           }
         }
+
+
       }
     }
 

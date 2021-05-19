@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class RootController {
 	
 
-	@RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+	@RequestMapping(value = "/",
+	method = RequestMethod.GET,
+	produces = MediaType.TEXT_HTML_VALUE)
 	public String index(){
 		return "<h1>Hello at Ansparen App</h1>";
 	}
