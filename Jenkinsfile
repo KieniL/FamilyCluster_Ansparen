@@ -88,9 +88,10 @@ pipeline {
             script{
               try{
                 sh 'rm checkstyle* || true'
-                sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/checkstyle.sh" '
-                sh 'chmod +x checkstyle.sh'
-                sh './checkstyle.sh'
+                //sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/checkstyle.sh" '
+                //sh 'chmod +x checkstyle.sh'
+                //sh './checkstyle.sh'
+                sh "docker run --rm -v $PWD:/src mattias/checkstyle:latest -c /sun_checks.xml /src > checkstyle.txt"
 
                 publishHTML (target: [
                   allowMissing: false,
