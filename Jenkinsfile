@@ -6,6 +6,8 @@ pipeline {
 
   environment {
     SONAR_TOKEN = credentials('sonarqube')
+    K8S_TOKEN = credentials('k8s')
+    K8S_SERVER = credentials('k8s_server')
   }
 
   /*tools {
@@ -160,9 +162,9 @@ pipeline {
     stage ('Deploying Stage') {
       steps {
         sh "sed -i \"s/<VERSION>/${BUILD_NUMBER}/g\" deployment.yaml"
-        sh "kubectl apply -f deployment.yaml"
-        sh "kubectl apply -f service.yaml"
-        sh "kubectl apply -f hpa.yaml"
+        sh "kubectl apply -f deployment.yaml --token $K8S_TOKEN --server $K8S_SERVER"
+        sh "kubectl apply -f service.yaml --token $K8S_TOKEN --server $K8S_SERVER"
+        sh "kubectl apply -f hpa.yaml --token $K8S_TOKEN --server $K8S_SERVER"
       }
 
     }
