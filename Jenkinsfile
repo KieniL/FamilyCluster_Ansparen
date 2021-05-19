@@ -1,13 +1,15 @@
 
-def app
-def mvnTool = tool 'localMaven'
-def sonar = tool 'sonar'
-def jdk = tool 'jdk'
 def containerBuild = "luke19/familyanspareservice:${BUILD_NUMBER}"
 
 
 pipeline {
   agent none
+
+  tools {
+    mvnTool 'localMaven' 
+    sonar 'sonar'
+    jdk 'jdk'
+  }
 
   stages {
 
