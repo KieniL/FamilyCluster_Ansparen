@@ -1,22 +1,27 @@
 
-node {
-  def app
-  def mvnTool = tool 'localMaven'
-  def sonar = tool 'sonar'
-  def jdk = tool 'jdk'
-  def containerBuild = "luke19/familyanspareservice:${BUILD_NUMBER}"
+def app
+def mvnTool = tool 'localMaven'
+def sonar = tool 'sonar'
+def jdk = tool 'jdk'
+def containerBuild = "luke19/familyanspareservice:${BUILD_NUMBER}"
 
-  checkout scm
+
+pipeline {
+  agent none
 
   stages {
 
+    stage('Checkout') {
+      steps {
+          checkout scm
+      }
+    }
+
     stage ('Compile Stage') {
-        try {
-            sh "${mvnTool}/bin/mvn clean compile"
-        }
-        catch (exc) {
-            error('Clean compile failed' + exc.message)
-        }
+      steps {
+          sh "${mvnTool}/bin/mvn clean compile"
+      }
+      
     }
 
     stage ('Test stage') {
@@ -24,26 +29,25 @@ node {
       parallel {
 
         stage ('Check Secrets Stage') {
-          sh "rm trufflehog.txt || true"
-          try {
-              sh 'docker run --rm --name trufflehog dxa4481/trufflehog --regex https://github.com/KieniL/FamilyCluster_Ansparen.git > trufflehog.txt' 	  
-          }catch (exc) {
-          }   
+
+          steps{
+            sh "rm trufflehog.txt || true"
+            sh 'docker run --rm --name trufflehog dxa4481/trufflehog --regex https://github.com/KieniL/FamilyCluster_Ansparen.git > trufflehog.txt'
       
-          publishHTML (target: [
-            allowMissing: false,
-            alwaysLinkToLastBuild: false,
-            keepAll: true,
-            reportDir: './',
-            reportFiles: 'trufflehog.txt',
-            reportName: "Trufflehog Report"
-          ])
+            publishHTML (target: [
+              allowMissing: false,
+              alwaysLinkToLastBuild: false,
+              keepAll: true,
+              reportDir: './',
+              reportFiles: 'trufflehog.txt',
+              reportName: "Trufflehog Report"
+            ])
+          }
+
         }
 
-
-
         stage ('Source Composition Analysis Stage') {
-          try {
+          steps {
               sh 'rm owasp* || true'
               sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/owasp-dependency-check.sh" '
               sh 'chmod +x owasp-dependency-check.sh'
@@ -58,75 +62,68 @@ node {
                   reportName: "OWASP Dependency Report"
               ])
           }
-          catch (exc) {
-              error('Source Composition Analysis failed' + exc.message)
-          }
+          
         }
 
 
         stage ('SAST') {
-          sh "${mvnTool}/bin/mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN"
+          steps {
+            sh "${mvnTool}/bin/mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN"
+            
+            publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'target/sonar',
+                reportFiles: 'report-task.txt',
+                reportName: "Sonarscan Report"
+            ])
+          }
           
-          publishHTML (target: [
-              allowMissing: false,
-              alwaysLinkToLastBuild: false,
-              keepAll: true,
-              reportDir: 'target/sonar',
-              reportFiles: 'report-task.txt',
-              reportName: "Sonarscan Report"
-          ])
         }
 
         stage ('Maven Testing Stage') {
-          try {
-              sh "rm test.txt || true"
-              
-              sh "${mvnTool}/bin/mvn test  > test.txt"
-              
-              publishHTML (target: [
-                  allowMissing: false,
-                  alwaysLinkToLastBuild: false,
-                  keepAll: true,
-                  reportDir: './',
-                  reportFiles: 'test.txt',
-                  reportName: "Maven Test Report"
-              ])
-              }
-          catch (exc) {
-              error('Testing failed' + exc.message)
-          }
+          steps {
+            sh "rm test.txt || true"
+            
+            sh "${mvnTool}/bin/mvn test  > test.txt"
+            
+            publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: './',
+                reportFiles: 'test.txt',
+                reportName: "Maven Test Report"
+            ])
+           }
+          
         }
       }
       
     }
 
     stage ('Packaging Stage') {
-
-    sh "${mvnTool}/bin/mvn clean package -DskipTests=true"
-      try {
-        docker.withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-          app = docker.build(containerBuild)
-            app.push()
+      steps {
+        sh "${mvnTool}/bin/mvn clean package -DskipTests=true"
+        script {
+          docker.withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+            app = docker.build(containerBuild)
+              app.push()
+          }
         }
-      }
-      catch (exc) {
-        error('Packaging failed' + exc.message)
+        
       }
     }
 
     stage ('Analyzing Stage') {    
-      try {
-      writeFile file: 'anchore_images', text: containerBuild
-        anchore name: 'anchore_images'
-      }
-      catch (exc) {
-        error('Packaging failed. ' + exc.message)
+      steps {
+        writeFile file: 'anchore_images', text: containerBuild
+          anchore name: 'anchore_images'
       }
     }
 
   }
-
-
 }
 /*
   stage ('Deploying Stage') {
