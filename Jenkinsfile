@@ -5,11 +5,11 @@ def containerBuild = "luke19/familyanspareservice:${BUILD_NUMBER}"
 pipeline {
   agent none
 
-  tools {
-    mvnTool 'localMaven' 
+  /*tools {
+    maven 'localMaven' 
     sonar 'sonar'
     jdk 'jdk'
-  }
+  }*/
 
   stages {
 
