@@ -20,7 +20,7 @@ spec:
         command: ['sh', '-c', "until nslookup mysql.family.svc.cluster.local; do echo waiting for mysql; sleep 2; done"]
       containers:
       - name:  ansparservice
-        image: luke19/familyansparservice:$VERSION
+        image: luke19/familyansparservice:<VERSION>
         imagePullPolicy: Always
         resources:
           limits:
