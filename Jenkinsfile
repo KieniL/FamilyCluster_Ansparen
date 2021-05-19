@@ -12,7 +12,7 @@ node {
   
     stage ('Compile Stage') {
         try {
-            sh "${mvnTool}/bin/mvn clean compile --file ansparen/pom.xml"
+            sh "${mvnTool}/bin/mvn clean compile"
         }
         catch (exc) {
             error('Clean compile failed' + exc.message)
@@ -40,7 +40,9 @@ node {
     stage ('Source Composition Analysis Stage') {
         try {
             sh 'rm owasp* || true'
-            sh 'bash ./owasp-dependency-check.sh'
+            sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/owasp-dependency-check.sh" '
+            sh 'chmod +x owasp-dependency-check.sh'
+            sh 'bash owasp-dependency-check.sh'
             
             publishHTML (target: [
                 allowMissing: false,
@@ -61,7 +63,7 @@ node {
   
   
     stage ('SAST') {
-        sh "${mvnTool}/bin/mvn sonar:sonar --file ansparen/pom.xml -Dsonar.login=$SONAR_TOKEN"
+        sh "${mvnTool}/bin/mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN"
         
         publishHTML (target: [
             allowMissing: false,
@@ -81,7 +83,7 @@ node {
         try {
             sh "rm test.txt || true"
             
-            sh "${mvnTool}/bin/mvn test --file ansparen/pom.xml > test.txt"
+            sh "${mvnTool}/bin/mvn test  > test.txt"
             
             publishHTML (target: [
                 allowMissing: false,
@@ -99,7 +101,7 @@ node {
   
   stage ('Packaging Stage') {
 
-    sh "${mvnTool}/bin/mvn clean package --file ansparen/pom.xml"
+    sh "${mvnTool}/bin/mvn clean package -DskipTests=true"
     try {
 	  docker.withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
 	    app = docker.build(containerBuild)
