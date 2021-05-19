@@ -1,5 +1,5 @@
 
-def containerBuild = "luke19/familyanspareservice:${BUILD_NUMBER}"
+def containerBuild = "luke19/familyansparservice:${BUILD_NUMBER}"
 
 pipeline {
   agent any
@@ -139,7 +139,6 @@ pipeline {
       steps {
         script{
           try{
-            sh "mvn clean package -DskipTests=true"
             withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
                 app = docker.build(containerBuild)
                 app.push()
