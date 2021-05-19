@@ -45,8 +45,8 @@ pipeline {
           
                 publishHTML (target: [
                   allowMissing: false,
-                  alwaysLinkToLastBuild: true,
-                  keepAll: false,
+                  alwaysLinkToLastBuild: false,
+                  keepAll: true,
                   reportDir: './',
                   reportFiles: 'trufflehog.txt',
                   reportName: "Trufflehog Report"
@@ -70,8 +70,8 @@ pipeline {
                 
                 publishHTML (target: [
                     allowMissing: false,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
                     reportDir: 'odc-reports',
                     reportFiles: 'dependency-check-report.html',
                     reportName: "OWASP Dependency Report"
@@ -91,12 +91,11 @@ pipeline {
                 sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/checkstyle.sh" '
                 sh 'chmod +x checkstyle.sh'
                 sh './checkstyle.sh'
-                //sh "docker run --rm -v ${workspace}:/src mattias/checkstyle:latest -c /sun_checks.xml /src > checkstyle.txt"
 
                 publishHTML (target: [
                   allowMissing: false,
-                  alwaysLinkToLastBuild: true,
-                  keepAll: false,
+                  alwaysLinkToLastBuild: false,
+                  keepAll: true,
                   reportDir: './',
                   reportFiles: 'checkstyle.txt',
                   reportName: "Checkstyle Report"
@@ -117,8 +116,8 @@ pipeline {
                 
                 publishHTML (target: [
                     allowMissing: false,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
                     reportDir: 'target/sonar',
                     reportFiles: 'report-task.txt',
                     reportName: "Sonarscan Report"
@@ -141,8 +140,8 @@ pipeline {
                 
                 publishHTML (target: [
                     allowMissing: false,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
                     reportDir: './',
                     reportFiles: 'test.txt',
                     reportName: "Maven Test Report"
