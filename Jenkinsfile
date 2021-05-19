@@ -20,8 +20,15 @@ pipeline {
 
     stage ('Compile Stage') {
       steps {
-          sh "mvn clean compile"
+        script {
+          try {
+            sh "mvn clean compile"
+          }catch (exc) {
+            error('Clean compile failed' + exc.message)
+          }
+        }
       }
+      
       
     }
 
@@ -30,97 +37,112 @@ pipeline {
       parallel {
 
         stage ('Check Secrets Stage') {
-
-          steps{
-            sh "rm trufflehog.txt || true"
-            sh 'docker run --rm --name trufflehog dxa4481/trufflehog --regex https://github.com/KieniL/FamilyCluster_Ansparen.git > trufflehog.txt'
-      
-            publishHTML (target: [
-              allowMissing: false,
-              alwaysLinkToLastBuild: false,
-              keepAll: true,
-              reportDir: './',
-              reportFiles: 'trufflehog.txt',
-              reportName: "Trufflehog Report"
-            ])
+          steps {
+            script{
+              try {
+                sh "rm trufflehog.txt || true"
+                sh 'docker run --rm --name trufflehog dxa4481/trufflehog --regex https://github.com/KieniL/FamilyCluster_Ansparen.git > trufflehog.txt'
+          
+                publishHTML (target: [
+                  allowMissing: false,
+                  alwaysLinkToLastBuild: false,
+                  keepAll: true,
+                  reportDir: './',
+                  reportFiles: 'trufflehog.txt',
+                  reportName: "Trufflehog Report"
+                ])
+              }catch (exc) {}   
+            }
           }
 
         }
 
         stage ('Source Composition Analysis Stage') {
           steps {
-              sh 'rm owasp* || true'
-              sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/owasp-dependency-check.sh" '
-              sh 'chmod +x owasp-dependency-check.sh'
-              sh 'bash owasp-dependency-check.sh'
-              
-              publishHTML (target: [
-                  allowMissing: false,
-                  alwaysLinkToLastBuild: false,
-                  keepAll: true,
-                  reportDir: 'odc-reports',
-                  reportFiles: 'dependency-check-report.html',
-                  reportName: "OWASP Dependency Report"
-              ])
+            script{
+              try{
+                sh 'rm owasp* || true'
+                sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/owasp-dependency-check.sh" '
+                sh 'chmod +x owasp-dependency-check.sh'
+                sh 'bash owasp-dependency-check.sh'
+                
+                publishHTML (target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'odc-reports',
+                    reportFiles: 'dependency-check-report.html',
+                    reportName: "OWASP Dependency Report"
+                ])
+              }catch (exc) {}
+            }
           }
-          
         }
 
 
         stage ('SAST') {
           steps {
-            sh "mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN"
-            
-            publishHTML (target: [
-                allowMissing: false,
-                alwaysLinkToLastBuild: false,
-                keepAll: true,
-                reportDir: 'target/sonar',
-                reportFiles: 'report-task.txt',
-                reportName: "Sonarscan Report"
-            ])
+            script{
+              try{
+                sh "mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN"
+                
+                publishHTML (target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'target/sonar',
+                    reportFiles: 'report-task.txt',
+                    reportName: "Sonarscan Report"
+                ])
+              }catch (exc) {}
+            }
           }
           
         }
 
         stage ('Maven Testing Stage') {
           steps {
-            sh "rm test.txt || true"
-            
-            sh "mvn test  > test.txt"
-            
-            publishHTML (target: [
-                allowMissing: false,
-                alwaysLinkToLastBuild: false,
-                keepAll: true,
-                reportDir: './',
-                reportFiles: 'test.txt',
-                reportName: "Maven Test Report"
-            ])
+            script{
+              try{
+                sh "rm test.txt || true"
+                
+                sh "mvn test  > test.txt"
+                
+                publishHTML (target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: './',
+                    reportFiles: 'test.txt',
+                    reportName: "Maven Test Report"
+                ])
+              }catch (exc) {}
+            }
           }
-          
         }
       }
-      
     }
 
     stage ('Packaging Stage') {
       steps {
-        sh "mvn clean package -DskipTests=true"
-        script {
-          docker.withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-            app = docker.build(containerBuild)
-              app.push()
-          }
+        script{
+          try{
+            sh "mvn clean package -DskipTests=true"
+            docker.withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+              app = docker.build(containerBuild)
+                app.push()
+            }
+          }catch (exc) {}
         }
-        
       }
     }
 
     stage ('Analyzing Stage') {    
       steps {
-        writeFile file: 'anchore_images', text: containerBuild
-          anchore name: 'anchore_images'
+        try{
+          writeFile file: 'anchore_images', text: containerBuild
+            anchore name: 'anchore_images'
+        }catch (exc) {}
       }
     }
 
