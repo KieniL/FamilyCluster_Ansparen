@@ -151,29 +151,24 @@ pipeline {
           }
         }
 
-
-      }
-    }
-
-    stage ('Packaging Stage') {
-      steps {
-        script{
-          try{
-            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                app = docker.build(containerBuild)
-                app.push()
+        stage ('Package and anchor stage'){
+          steps {
+            script{
+              try{
+                withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                    app = docker.build(containerBuild)
+                    app.push()
+                }
+                writeFile file: 'anchore_images', text: containerBuild
+                anchore name: 'anchore_images'
+              }catch (exc) {
+                error('packaging failed' + exc.message)
+              }
             }
-          }catch (exc) {
-            error('packaging failed' + exc.message)
           }
         }
-      }
-    }
 
-    stage ('Analyzing Stage') {    
-      steps {
-        writeFile file: 'anchore_images', text: containerBuild
-          anchore name: 'anchore_images'
+
       }
     }
 
