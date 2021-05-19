@@ -1,7 +1,6 @@
 package com.kienast.ansparen.service;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ public class AmountServiceImpl implements AmountService {
 			for(Amount a: amounts) {
 				AmountEntryModel amountEntryModel = new AmountEntryModel();
 				
-				amountEntryModel.setAmount(new BigDecimal(a.getAmount(), MathContext.DECIMAL64));
+				amountEntryModel.setAmount(BigDecimal.valueOf(a.getAmount()));
 				amountEntryModel.setDate(a.getDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
 				
 				entries.add(amountEntryModel);
@@ -114,7 +113,7 @@ public class AmountServiceImpl implements AmountService {
 						totalPerMonth.put(a.getDate(), a.getAmount());
 					}
 					
-					amountEntryModel.setAmount(new BigDecimal(a.getAmount(), MathContext.DECIMAL64));
+					amountEntryModel.setAmount(BigDecimal.valueOf(a.getAmount()));
 					amountEntryModel.setDate(a.getDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
 					
 					entries.add(amountEntryModel);
@@ -133,7 +132,7 @@ public class AmountServiceImpl implements AmountService {
 				AmountEntryModel amountEntryModel = new AmountEntryModel();
 				
 				amountEntryModel.setDate(entry.getKey().toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
-				amountEntryModel.setAmount(new BigDecimal(entry.getValue(), MathContext.DECIMAL64));
+				amountEntryModel.setAmount(BigDecimal.valueOf(entry.getValue()));
 				entries.add(amountEntryModel);
 			}
 			total.setEntries(entries);

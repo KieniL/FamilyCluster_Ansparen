@@ -160,7 +160,9 @@ pipeline {
     stage ('Deploying Stage') {
       steps {
         sh "sed -i \"s/<VERSION>/${BUILD_NUMBER}/g\" deployment.yaml"
-        sh "mvn test  > test.txt"
+        sh "kubectl apply -f deployment.yaml"
+        sh "kubectl apply -f service.yaml"
+        sh "kubectl apply -f hpa.yaml"
       }
 
     }
