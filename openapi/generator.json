@@ -1,0 +1,9 @@
+{
+	"configPackage":"com.kienast.ansparen.config",
+	"apiPackage":"com.kienast.ansparen.rest.api",
+	"modelPackage":"com.kienast.ansparen.rest.api.model",
+	"interfaceOnly":true,
+	"java8":false,
+	"modelNameSuffix": "Model",
+	"hideGenerationTimestamp": true
+}
