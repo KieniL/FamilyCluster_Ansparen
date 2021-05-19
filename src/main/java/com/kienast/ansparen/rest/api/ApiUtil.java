@@ -13,9 +13,7 @@ public class ApiUtil {
             res.setCharacterEncoding("UTF-8");
             res.addHeader("Content-Type", contentType);
             res.getWriter().print(example);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch(NullPointerException e){
+        } catch (IOException  | NullPointerException e) {
             throw new RuntimeException(e);
         }
     }
