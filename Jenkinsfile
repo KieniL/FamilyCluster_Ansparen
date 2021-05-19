@@ -45,8 +45,8 @@ pipeline {
           
                 publishHTML (target: [
                   allowMissing: false,
-                  alwaysLinkToLastBuild: false,
-                  keepAll: true,
+                  alwaysLinkToLastBuild: true,
+                  keepAll: false,
                   reportDir: './',
                   reportFiles: 'trufflehog.txt',
                   reportName: "Trufflehog Report"
@@ -70,8 +70,8 @@ pipeline {
                 
                 publishHTML (target: [
                     allowMissing: false,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: false,
                     reportDir: 'odc-reports',
                     reportFiles: 'dependency-check-report.html',
                     reportName: "OWASP Dependency Report"
@@ -83,7 +83,7 @@ pipeline {
           }
         }
 
-        stage ('Checkstyles Stage Stage') {
+        stage ('Checkstyles Stage') {
           steps {
             script{
               try{
@@ -94,14 +94,14 @@ pipeline {
 
                 publishHTML (target: [
                   allowMissing: false,
-                  alwaysLinkToLastBuild: false,
-                  keepAll: true,
+                  alwaysLinkToLastBuild: true,
+                  keepAll: false,
                   reportDir: './',
                   reportFiles: 'checkstyle.txt',
                   reportName: "Checkstyle Report"
                 ])
               }catch (exc) {
-                error('Source composition analysis failed' + exc.message)
+                error('Check style failed' + exc.message)
               }
             }
           }
@@ -116,8 +116,8 @@ pipeline {
                 
                 publishHTML (target: [
                     allowMissing: false,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: false,
                     reportDir: 'target/sonar',
                     reportFiles: 'report-task.txt',
                     reportName: "Sonarscan Report"
@@ -140,8 +140,8 @@ pipeline {
                 
                 publishHTML (target: [
                     allowMissing: false,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: false,
                     reportDir: './',
                     reportFiles: 'test.txt',
                     reportName: "Maven Test Report"
