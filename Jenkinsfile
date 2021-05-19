@@ -140,8 +140,8 @@ pipeline {
         script{
           try{
             sh "mvn clean package -DskipTests=true"
-            docker.withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-              app = docker.build(containerBuild)
+            withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                app = docker.build(containerBuild)
                 app.push()
             }
           }catch (exc) {
