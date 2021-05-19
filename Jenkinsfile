@@ -20,7 +20,7 @@ pipeline {
 
     stage ('Compile Stage') {
       steps {
-          sh "${mvnTool}/bin/mvn clean compile"
+          sh "mvn clean compile"
       }
       
     }
@@ -69,7 +69,7 @@ pipeline {
 
         stage ('SAST') {
           steps {
-            sh "${mvnTool}/bin/mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN"
+            sh "mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN"
             
             publishHTML (target: [
                 allowMissing: false,
@@ -87,7 +87,7 @@ pipeline {
           steps {
             sh "rm test.txt || true"
             
-            sh "${mvnTool}/bin/mvn test  > test.txt"
+            sh "mvn test  > test.txt"
             
             publishHTML (target: [
                 allowMissing: false,
@@ -106,7 +106,7 @@ pipeline {
 
     stage ('Packaging Stage') {
       steps {
-        sh "${mvnTool}/bin/mvn clean package -DskipTests=true"
+        sh "mvn clean package -DskipTests=true"
         script {
           docker.withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
             app = docker.build(containerBuild)
