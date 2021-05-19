@@ -157,6 +157,14 @@ pipeline {
       }
     }
 
+    stage ('Deploying Stage') {
+      steps {
+        sh "sed -i \"s/<VERSION>/${BUILD_NUMBER}/g\" dev-deployment.yml"
+        sh "mvn test  > test.txt"
+      }
+
+    }
+
   }
 }
 
