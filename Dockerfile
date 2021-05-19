@@ -5,7 +5,7 @@ WORKDIR /APP
 COPY ./target/ansparen.jar app.jar
 
 # run container as non root
-RUN apk update && addgroup -S familygroup && adduser -S familyuser -G familygroup
+RUN apk update && apk upgrade -U -a && addgroup -S familygroup && adduser -S familyuser -G familygroup
 USER familyuser
 
 ENTRYPOINT java -jar app.jar
