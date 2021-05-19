@@ -51,7 +51,9 @@ pipeline {
                   reportFiles: 'trufflehog.txt',
                   reportName: "Trufflehog Report"
                 ])
-              }catch (exc) {}   
+              }catch (exc) {
+                error('Check secret failed' + exc.message)
+              }   
             }
           }
 
@@ -74,7 +76,9 @@ pipeline {
                     reportFiles: 'dependency-check-report.html',
                     reportName: "OWASP Dependency Report"
                 ])
-              }catch (exc) {}
+              }catch (exc) {
+                error('Source composition analysis failed' + exc.message)
+              }
             }
           }
         }
@@ -94,7 +98,9 @@ pipeline {
                     reportFiles: 'report-task.txt',
                     reportName: "Sonarscan Report"
                 ])
-              }catch (exc) {}
+              }catch (exc) {
+                error('SAST failed' + exc.message)
+              }
             }
           }
           
@@ -116,7 +122,9 @@ pipeline {
                     reportFiles: 'test.txt',
                     reportName: "Maven Test Report"
                 ])
-              }catch (exc) {}
+              }catch (exc) {
+                error('Maven test failed' + exc.message)
+              }
             }
           }
         }
@@ -132,7 +140,9 @@ pipeline {
               app = docker.build(containerBuild)
                 app.push()
             }
-          }catch (exc) {}
+          }catch (exc) {
+            error('packaging failed' + exc.message)
+          }
         }
       }
     }
