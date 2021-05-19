@@ -66,7 +66,7 @@ pipeline {
                 sh 'rm owasp* || true'
                 sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/owasp-dependency-check.sh" '
                 sh 'chmod +x owasp-dependency-check.sh'
-                sh 'bash owasp-dependency-check.sh'
+                sh './owasp-dependency-check.sh'
                 
                 publishHTML (target: [
                     allowMissing: false,
@@ -90,7 +90,7 @@ pipeline {
                 sh 'rm checkstyle.txt || true'
                 sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/checkstyle.sh" '
                 sh 'chmod +x checkstyle.sh'
-                sh 'bash checkstyle.sh'
+                sh './checkstyle.sh'
 
                 publishHTML (target: [
                   allowMissing: false,
