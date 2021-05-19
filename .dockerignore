@@ -2,5 +2,4 @@
 **
 
 # Allow files and directories
-!/src/**
-!pom.xml
+!target/ansparen*.jar

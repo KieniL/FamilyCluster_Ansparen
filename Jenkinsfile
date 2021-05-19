@@ -22,13 +22,13 @@ pipeline {
       }
     }
 
-    stage ('Compile Stage') {
+    stage ('Clean Package Stage') {
       steps {
         script {
           try {
-            sh "mvn clean compile"
+            sh "mvn clean package -DskipTests=true"
           }catch (exc) {
-            error('Clean compile failed' + exc.message)
+            error('Clean package failed' + exc.message)
           }
         }
       }
@@ -159,7 +159,7 @@ pipeline {
 
     stage ('Deploying Stage') {
       steps {
-        sh "sed -i \"s/<VERSION>/${BUILD_NUMBER}/g\" dev-deployment.yml"
+        sh "sed -i \"s/<VERSION>/${BUILD_NUMBER}/g\" deployment.yaml"
         sh "mvn test  > test.txt"
       }
 
@@ -167,38 +167,3 @@ pipeline {
 
   }
 }
-
-/*
-  stage ('Deploying Stage') {
-    try {
-	  sh "docker run -d -p 8081:8081 --name ansparen ${containerBuild}"
-  	}
-    catch (exc) {
-      error('Deploying failed' + exc.message)
-    }
-  }
- 
-  stage ('DAST') {
-    try {
-    
-      sh "rm zap.txt || true"
-      
-	  sh "docker run --rm -t owasp/zap2docker-stable zap-full-scan.py -t http://localhost:8080/ > zap.txt"
-  	}
-    catch (exc) {
-    }
-    
-    publishHTML (target: [
-          allowMissing: false,
-          alwaysLinkToLastBuild: false,
-          keepAll: true,
-          reportDir: './',
-          reportFiles: 'zap.txt',
-          reportName: "OWASP ZAP Report"
-      ])
-      
-      sh "docker stop ansparen && docker rm ansparen"
-  }
-
-}
-*/
