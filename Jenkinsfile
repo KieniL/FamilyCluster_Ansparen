@@ -88,7 +88,7 @@ pipeline {
           steps {
             script{
               try{
-                sh "mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN"
+                sh "mvn sonar:sonar"
                 
                 publishHTML (target: [
                     allowMissing: false,
