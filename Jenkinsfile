@@ -4,6 +4,10 @@ def containerBuild = "luke19/familyanspareservice:${BUILD_NUMBER}"
 pipeline {
   agent any
 
+  environment {
+    SONAR_TOKEN = credentials('sonarqube')
+  }
+
   /*tools {
     maven 'localMaven' 
     sonar 'sonar'
@@ -88,7 +92,7 @@ pipeline {
           steps {
             script{
               try{
-                sh "mvn sonar:sonar"
+                sh "mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN"
                 
                 publishHTML (target: [
                     allowMissing: false,
