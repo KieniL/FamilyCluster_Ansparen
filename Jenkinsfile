@@ -36,6 +36,23 @@ pipeline {
 
       parallel {
 
+        stage ('Package and anchor stage'){
+          steps {
+            script{
+              try{
+                withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
+                    app = docker.build(containerBuild)
+                    app.push()
+                }
+                writeFile file: 'anchore_images', text: containerBuild
+                anchore name: 'anchore_images'
+              }catch (exc) {
+                error('packaging failed' + exc.message)
+              }
+            }
+          }
+        }
+
         stage ('Check Secrets Stage') {
           steps {
             script{
@@ -150,25 +167,6 @@ pipeline {
             }
           }
         }
-
-        stage ('Package and anchor stage'){
-          steps {
-            script{
-              try{
-                withDockerRegistry(credentialsId: 'docker', url: 'https://index.docker.io/v1/') {
-                    app = docker.build(containerBuild)
-                    app.push()
-                }
-                writeFile file: 'anchore_images', text: containerBuild
-                anchore name: 'anchore_images'
-              }catch (exc) {
-                error('packaging failed' + exc.message)
-              }
-            }
-          }
-        }
-
-
       }
     }
 
