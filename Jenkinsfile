@@ -88,6 +88,7 @@ pipeline {
             script{
               try{
                 sh 'rm checkstyle* || true'
+                sh "echo $PWD"
                 //sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/checkstyle.sh" '
                 //sh 'chmod +x checkstyle.sh'
                 //sh './checkstyle.sh'
