@@ -89,16 +89,18 @@ pipeline {
               try{
                 sh 'rm checkstyle* || true'
                 sh "docker run --rm -v ${workspace}:/src mattias/checkstyle:latest -c /sun_checks.xml /src > checkstyle.txt"
-
-                publishHTML (target: [
-                  allowMissing: false,
-                  alwaysLinkToLastBuild: false,
-                  keepAll: true,
-                  reportDir: './',
-                  reportFiles: 'checkstyle.txt',
-                  reportName: "Checkstyle Report"
-                ])
               }catch (exc) {}
+
+              
+              publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: './',
+                reportFiles: 'checkstyle.txt',
+                reportName: "Checkstyle Report"
+              ])
+              
             }
           }
         }
