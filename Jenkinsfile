@@ -161,6 +161,15 @@ pipeline {
                     reportFiles: 'test.txt',
                     reportName: "Maven Test Report"
                 ])
+
+                ppublishHTML (target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'target/jacoco-report'',
+                    reportFiles: 'index.html',
+                    reportName: "Jacoco Report"
+                ])
               }catch (exc) {
                 error('Maven test failed' + exc.message)
               }
