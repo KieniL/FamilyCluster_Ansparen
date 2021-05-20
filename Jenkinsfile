@@ -182,7 +182,7 @@ pipeline {
             script{
               sh "mvn spotbugs:spotbugs"
 
-              junit checksName: 'Spotbugs', testResults: '**/target/spotbugs/spotbugs.xml'
+              junit checksName: 'Spotbugs', testResults: 'target/spotbugs/spotbugs.xml'
             }
           }
         }
