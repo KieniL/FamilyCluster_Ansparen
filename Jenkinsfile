@@ -162,7 +162,7 @@ pipeline {
                     reportName: "Maven Test Report"
                 ])
 
-                ppublishHTML (target: [
+                publishHTML (target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: false,
                     keepAll: true,
