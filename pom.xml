@@ -200,7 +200,7 @@
 				<configuration>
 					<xmlOutput>true</xmlOutput>
 					<!-- Optional directory to put spotbugs xdoc xml report -->
-					<xmlOutputDirectory>target/spotbugs</xmlOutputDirectory>
+					<xmlOutputDirectory>./</xmlOutputDirectory>
 				</configuration>
 			</plugin>
 

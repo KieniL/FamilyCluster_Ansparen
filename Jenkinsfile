@@ -182,7 +182,16 @@ pipeline {
             script{
               sh "mvn spotbugs:spotbugs"
 
-              junit checksName: 'Spotbugs', testResults: 'target/spotbugs/spotbugs.xml'
+              junit checksName: 'Spotbugs', testResults: 'spotbugs.xml'
+
+              publishHTML (target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: './',
+                    reportFiles: 'spotbugs.xml',
+                    reportName: "Spotbugs Report"
+              ])
             }
           }
         }
