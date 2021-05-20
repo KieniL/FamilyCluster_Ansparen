@@ -176,6 +176,16 @@ pipeline {
             }
           }
         }
+
+        stage ('Spotbugs Stage') {
+          steps {
+            script{
+              sh "mvn spotbugs:spotbugs"
+
+              junit 'target/spotbugs/spotbugs.xml'
+            }
+          }
+        }
       }
     }
 
