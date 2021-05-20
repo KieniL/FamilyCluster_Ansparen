@@ -182,8 +182,6 @@ pipeline {
             script{
               sh "mvn spotbugs:spotbugs"
 
-              junit checksName: 'Spotbugs', testResults: 'spotbugs.xml'
-
               publishHTML (target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: false,
