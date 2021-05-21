@@ -10,14 +10,6 @@ pipeline {
 
   stages {
 
-    stage ('kubectl'){
-      steps {
-        script {
-          sh "kubectl version"
-        }
-      }
-    }
-
     stage('Checkout') {
       steps {
           checkout scm
