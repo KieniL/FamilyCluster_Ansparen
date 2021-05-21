@@ -196,7 +196,7 @@ pipeline {
       }
     }
 
-    /*stage ('Deploying Stage') {
+    stage ('Deploying Stage') {
       steps {
         sh "sed -i \"s/<VERSION>/${BUILD_NUMBER}/g\" deployment.yaml"
         sh "kubectl apply -f deployment.yaml --token $K8S_TOKEN --server $K8S_SERVER"
@@ -204,7 +204,7 @@ pipeline {
         sh "kubectl apply -f hpa.yaml --token $K8S_TOKEN --server $K8S_SERVER"
       }
 
-    }*/
+    }
 
   }
 }
