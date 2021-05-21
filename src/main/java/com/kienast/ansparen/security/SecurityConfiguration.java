@@ -10,20 +10,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableWebSecurity(debug = false)
 @EnableGlobalMethodSecurity(securedEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter  {
-	
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
-		.cors().and()
-		.authorizeRequests()
-		.antMatchers(HttpMethod.POST, "/ansparen").permitAll()
-		.antMatchers(HttpMethod.GET, "/ansparen").permitAll()
-		.antMatchers(HttpMethod.GET, "/").permitAll()
-		.antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
-		.antMatchers(HttpMethod.GET, "/ansparen/{\\d+}").permitAll();
-		//.antMatchers("/**").authenticated();
-	// @formatter:on
+		http.csrf().disable().cors().and().authorizeRequests().antMatchers(HttpMethod.POST, "/ansparen").permitAll()
+				.antMatchers(HttpMethod.GET, "/ansparen").permitAll().antMatchers(HttpMethod.GET, "/").permitAll()
+				.antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
+				.antMatchers(HttpMethod.GET, "/ansparen/{\\d+}").permitAll();
+		// .antMatchers("/**").authenticated();
+		// @formatter:on
 	}
 
 }
