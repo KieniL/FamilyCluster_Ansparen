@@ -6,8 +6,6 @@ pipeline {
 
   environment {
     SONAR_TOKEN = credentials('sonarqube')
-    K8S_TOKEN = credentials('k8s')
-    K8S_SERVER = credentials('k8s_server')
   }
 
   stages {
