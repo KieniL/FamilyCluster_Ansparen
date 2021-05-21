@@ -34,7 +34,7 @@ pipeline {
 
       parallel {
 
-        stage ('Package and anchor stage'){
+        stage ('Imaging stage'){
           steps {
             script{
               try{
@@ -42,8 +42,6 @@ pipeline {
                     app = docker.build(containerBuild)
                     app.push()
                 }
-                writeFile file: 'anchore_images', text: containerBuild
-                anchore name: 'anchore_images'
               }catch (exc) {
                 error('packaging failed' + exc.message)
               }
@@ -194,13 +192,27 @@ pipeline {
       }
     }
 
-    stage ('Deploying Stage') {
-      steps {
-        sh "sed -i \"s/<VERSION>/${BUILD_NUMBER}/g\" deployment.yaml"
-        sh "kubectl apply -f deployment.yaml"
-        sh "kubectl apply -f service.yaml"
-        sh "kubectl apply -f hpa.yaml"
+    stage ('Deploying and Anchoring Stage') {
+
+      parallel {
+        stage ('Deploying Stage') {
+          steps {
+            sh "sed -i \"s/<VERSION>/${BUILD_NUMBER}/g\" deployment.yaml"
+            sh "kubectl apply -f deployment.yaml"
+            sh "kubectl apply -f service.yaml"
+            sh "kubectl apply -f hpa.yaml"
+          }
+        }
+
+        stage ('Anchoring Stage'){
+          steps {
+            writeFile file: 'anchore_images', text: containerBuild
+                anchore name: 'anchore_images'
+          }
+        }
+
       }
+      
 
     }
 
