@@ -114,7 +114,7 @@ pipeline {
                     reportName: "Kube Score Report"
                 ])
               }catch (exc) {
-                error('Kube score failed' + exc.message)
+                
               }
             }
           }
@@ -138,7 +138,7 @@ pipeline {
                     reportName: "Kube Val Report"
                 ])
               }catch (exc) {
-                error('Kube val failed' + exc.message)
+                
               }
             }
           }
