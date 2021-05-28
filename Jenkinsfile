@@ -104,18 +104,18 @@ pipeline {
                 sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/kube-score.sh" '
                 sh 'chmod +x kube-score.sh'
                 sh './kube-score.sh'
-                
-                publishHTML (target: [
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
-                    reportDir: './',
-                    reportFiles: 'kube-score.txt',
-                    reportName: "Kube Score Report"
-                ])
               }catch (exc) {
                 
-              }
+              } 
+              publishHTML (target: [
+                  allowMissing: false,
+                  alwaysLinkToLastBuild: false,
+                  keepAll: true,
+                  reportDir: './',
+                  reportFiles: 'kube-score.txt',
+                  reportName: "Kube Score Report"
+              ])
+              
             }
           }
         }
@@ -128,18 +128,18 @@ pipeline {
                 sh 'wget "https://raw.githubusercontent.com/KieniL/FamilyCluster_Config/master/kube-val.sh" '
                 sh 'chmod +x kube-val.sh'
                 sh './kube-val.sh'
-                
-                publishHTML (target: [
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
-                    reportDir: './',
-                    reportFiles: 'kube-val.txt',
-                    reportName: "Kube Val Report"
-                ])
               }catch (exc) {
                 
-              }
+              }  
+              publishHTML (target: [
+                  allowMissing: false,
+                  alwaysLinkToLastBuild: false,
+                  keepAll: true,
+                  reportDir: './',
+                  reportFiles: 'kube-val.txt',
+                  reportName: "Kube Val Report"
+              ])
+              
             }
           }
         }
