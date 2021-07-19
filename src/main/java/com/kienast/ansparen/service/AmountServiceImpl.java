@@ -9,12 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.kienast.ansparen.controller.AnsparController;
 import com.kienast.ansparen.model.Amount;
 import com.kienast.ansparen.model.Category;
 import com.kienast.ansparen.repository.AmountRespository;
 import com.kienast.ansparen.rest.api.model.AmountEntryModel;
 import com.kienast.ansparen.rest.api.model.CategoryResponseModel;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +30,8 @@ public class AmountServiceImpl implements AmountService {
 	@Autowired
 	private CategoryService categoryService;
 
+	private static Logger logger = LogManager.getLogger(AnsparController.class.getName());
+
 	@Override
 	public Amount addAmount(Double amountInput, Timestamp date, String categoryDescription) {
 		
@@ -38,8 +43,6 @@ public class AmountServiceImpl implements AmountService {
 			
 			entity = amountRespository.save(new Amount(date, amountInput, category));
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
 			throw e;
 		}
 		return entity;
@@ -73,8 +76,7 @@ public class AmountServiceImpl implements AmountService {
 			}
 			response.setEntries(entries);
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			logger.info(e.getMessage());
 		}
 		
 		return response;	
@@ -140,8 +142,7 @@ public class AmountServiceImpl implements AmountService {
 			
 			
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			logger.info(e.getMessage());
 		}
 		
 		return response;
