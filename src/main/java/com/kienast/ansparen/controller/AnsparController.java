@@ -2,6 +2,7 @@ package com.kienast.ansparen.controller;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class AnsparController implements AnsparenApi {
 
 			logger.info("Try to add Entry for " + ansparEntryModel.getDescription());
 			entity = amountService.addAmount(ansparEntryModel.getValue().doubleValue(),
-					Timestamp.valueOf(ansparEntryModel.getDate().atStartOfDay()), ansparEntryModel.getDescription());
+					Timestamp.valueOf(ansparEntryModel.getDate().atTime(LocalTime.now())), ansparEntryModel.getDescription());
 
 		} catch (Exception e) {
 			logger.error("Failed at setting entry for for " + ansparEntryModel.getDescription() + ": " + e.getMessage());
