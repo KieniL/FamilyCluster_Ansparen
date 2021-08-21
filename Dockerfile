@@ -1,4 +1,11 @@
-FROM luke19/spring-base-image:1628781512
+FROM luke19/spring-base-image:1629374721
+
+LABEL maintainer="KieniL"
+LABEL name="ansparen"
+LABEL version="1.0.0"
+LABEL author="KieniL"
+LABEL contact="https://github.com/KieniL/FamilyCluster_Ansparen/issues"
+LABEL documentation="https://github.com/KieniL/FamilyCluster_Ansparen"
 
 ENV DB_ANSPAREN_HOST=tmp
 ENV DB_ANSPAREN_DB=tmp
