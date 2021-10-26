@@ -3,3 +3,4 @@
 
 # Allow files and directories
 !target/ansparen*.jar
+!entrypoint.sh

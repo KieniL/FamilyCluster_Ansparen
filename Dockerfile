@@ -16,7 +16,8 @@ ENV AUTH_URL=test1234
 
 
 COPY ./target/ansparen.jar /app/app.jar
+COPY entrypoint.sh /app/entrypoint.sh
 
-ENTRYPOINT ["java", "-Djava.io.tmpdir=/app/tmp" ,"-jar", "app.jar"]
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]
 
 EXPOSE 8080
